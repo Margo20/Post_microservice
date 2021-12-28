@@ -1,0 +1,7 @@
+/venv
+/.idea
+*.pyc
+*.pyo
+*.pytest_cach
+/run.py
+/send_email.py
