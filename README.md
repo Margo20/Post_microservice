@@ -1,4 +1,10 @@
 # 'Post_microservice' task implementation.
 ### Content/Instruments:
-Celery, redis, docker, docker-compose, fastapi, flower
+Celery, rabbit, fastapi, email, docker, docker-compose, flower
+
+
+###how to setup
+setup your email credential  to .env file
+
+
 

@@ -1,18 +1,12 @@
-#!/bin/sh
+#!/bin/bash
 
-#if [ "$DATABASE" = "postgres" ]
-#then
-#    echo "Waiting for postgres..."
-#    echo $SQL_HOST $SQL_PORT
-#    while ! nc -z $SQL_HOST $SQL_PORT; do
-#      sleep 0.1
-#    done
-#
-#    echo "PostgreSQL started"
-#fi
+# if any of the commands in your code fails for any reason, the entire script fails
+set -o errexit
+# fail exit if one of your pipe command fails
+set -o pipefail
+# exits if any of your variables is not set
+set -o nounset
 
-# python manage.py flush --no-input
-python manage.py migrate
-python manage.py collectstatic --no-input --clear
+
 
 exec "$@"

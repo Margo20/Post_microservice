@@ -1,36 +1,21 @@
-import msgpack as msgpack
-from kafka import KafkaConsumer
-from kafka import TopicPartition
+import requests
+from pykafka import KafkaClient
 
-def receive():
-    consumer_conf = {'bootstrap.servers': 'localhost:9092',
-                     'group.id': 'my_favorite_group',
-                     'auto.offset.reset': "earliest"}
+# client = KafkaClient(hosts="localhost:9092")
 
-    consumer = KafkaConsumer(value_deserializer=consumer_conf)
-    consumer.assign([TopicPartition('topic-email', 2)])
-    msg = next(consumer)
-    consumer.subscribe(['EMAIL_TOPIC'])
-    for msg in consumer:
-        assert isinstance(msg.value, dict)
+client = KafkaClient(hosts="10.1.0.111:9092")
 
-# consumer = KafkaConsumer('topic-email')
-#
-# for msg in consumer:
-#     print (msg)
-#
-# # join a consumer group for dynamic partition assignment and offset commits
-# consumer = KafkaConsumer('topic-email', group_id='my_favorite_group')
-# for msg in consumer:
-#     print (msg)
-#
-# # manually assign the partition list for the consumer
-# consumer = KafkaConsumer(bootstrap_servers='localhost:9092')
-# consumer.assign([TopicPartition('topic-email', 2)])
-# msg = next(consumer)
-#
-# # Deserialize msgpack-encoded values
-# consumer = KafkaConsumer(value_deserializer=msgpack.loads)
-# consumer.subscribe(['msgpackfoo'])
-# for msg in consumer:
-#     assert isinstance(msg.value, dict)
+consumer = client.topics["topic-email"].get_simple_consumer(
+    consumer_group="mygroup",
+    reset_offset_on_start=False)
+for idx, message in enumerate(consumer):
+    decoded_mail_address = message.value.decode()
+    # send_mail(decoded_mail_address)
+    requests.post(
+        "http://fastapi:8080/my_send_email",
+        json={
+            "email_address": decoded_mail_address
+        })
+    # send_mail("rita.aniskovets@gmail.com")
+    print(decoded_mail_address, idx)
+    consumer.commit_offsets()
