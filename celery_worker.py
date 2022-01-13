@@ -29,8 +29,8 @@ class Envs:
 def send_mail(self, msg):
     login = Envs.MAIL_USERNAME
     password = Envs.MAIL_PASSWORD
-    # url = Envs.MAIL_SERVER
-    url = 'smtp.gmail8.com'
+    url = Envs.MAIL_SERVER
+    # url = 'smtp.gmail8.com'
     email_msg = MIMEMultipart()
     email_msg['Subject'] = 'Trade is ready'
     email_msg['From'] = Envs.MAIL_FROM
