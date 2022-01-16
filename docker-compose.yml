@@ -12,7 +12,7 @@ services:
     volumes:
       - .:/app
     env_file:
-      - .env.dev
+      - .env
     depends_on:
       - rabbit
     networks:
@@ -31,7 +31,7 @@ services:
     volumes:
       - .:/app
     env_file:
-      - .env.dev
+      - .env
     depends_on:
       - rabbit
     networks:
@@ -44,6 +44,10 @@ services:
     command: /start-consumer.sh
     volumes:
       - .:/app
+    env_file:
+      - .env
+    depends_on:
+      - fastapi
     networks:
       - external_bridge_network
 
@@ -55,7 +59,7 @@ services:
     volumes:
       - .:/app
     env_file:
-      - .env.dev
+      - .env
     ports:
       - 5557:5555
     depends_on:

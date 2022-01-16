@@ -7,5 +7,11 @@ Celery, rabbit, fastapi, email, docker, docker-compose, flower
 
 setup your email credential  to .env file
 
+### to create a hash and salt
+
+use hash_password.py <your password>
+put result to .env
+
+
 
 

@@ -1,8 +1,6 @@
 import os
 
 from celery.exceptions import MaxRetriesExceededError
-from dotenv import load_dotenv
-load_dotenv('.env')
 import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
@@ -30,7 +28,6 @@ def send_mail(self, msg):
     login = Envs.MAIL_USERNAME
     password = Envs.MAIL_PASSWORD
     url = Envs.MAIL_SERVER
-    # url = 'smtp.gmail8.com'
     email_msg = MIMEMultipart()
     email_msg['Subject'] = 'Trade is ready'
     email_msg['From'] = Envs.MAIL_FROM
@@ -41,13 +38,11 @@ def send_mail(self, msg):
         server = smtplib.SMTP_SSL(url, 465)
         server.login(login, password)
         server.sendmail(login, msg['email_address'], email_msg.as_string())
+        logger.info("Email was send to address: %s" % (msg['email_address']))
         server.quit()
-    except Exception:
-        print("No connect")
+    except Exception as exc:
+        logger.error("No connect to: %s, exception message: %s" % (url, str(exc)))
         try:
             self.retry(countdown=60*1)
         except MaxRetriesExceededError as err:
-            print(str(err))
-
-
-
+            logger.error("All retries are succeded: %s, exception message: %s" % (url, str(err)))
